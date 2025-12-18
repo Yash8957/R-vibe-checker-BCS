@@ -1,0 +1,60 @@
+Setup – optional pip install commands (for CPU or CUDA) to get torch and torchvision.
+Imports & config – device selection (CPU/GPU), seeds for reproducibility, deterministic flags.
+Data – loads MNIST via torchvision.datasets.MNIST, applies standard normalization (mean=0.1307, std=0.3081), creates train/val/test loaders, and visualizes a sample grid.
+Model – a compact CNN:
+
+Conv2d(1→32, 3×3, pad=1) → ReLU
+Conv2d(32→64, 3×3, pad=1) → ReLU → MaxPool(2×2)
+Dropout → Flatten
+Linear(64×14×14 → 128) → ReLU → Dropout
+Linear(128 → 10)
+
+
+Training utilities – clean train_one_epoch and evaluate functions.
+Train loop – baseline with Adam(lr=1e-3, weight_decay=1e-4) and StepLR(step_size=5, gamma=0.5).
+Curves – plots loss and accuracy for train/val.
+Test eval – computes test accuracy and renders a confusion matrix.
+Save/Load – saves best weights to mnist_cnn.pth, shows how to reload.
+Inference demo – visualizes predictions on 16 test images.
+Hyperparameter tuning notes – practical ranges, strategy, and diagnostics to fix under/overfitting.
+(Optional) tiny sweep – a quick 2‑epoch LR/weight-decay comparison.
+
+
+Why these choices (quick explanations)
+
+Normalization (0.1307, 0.3081) is widely used for MNIST to stabilize gradients and speed up convergence (as in torchvision examples).
+Architecture balances simplicity and performance: two small conv blocks and a single maxpool keep parameter count low while getting excellent accuracy on MNIST.
+Optimizer: Adam with lr=1e-3 is a reliable default; we add weight decay for generalization and a StepLR to refine later epochs.
+Validation split: we hold out 5k examples from the training set to tune hyperparameters without touching the test set, which remains the final report card.
+
+
+How to run
+
+Open the notebook in Jupyter, VS Code, or Colab.
+If you don’t have PyTorch, uncomment the install cell at the top (CPU or CUDA variant).
+Run cells top to bottom. With a decent GPU, you’ll get ≈99% test accuracy in a few seconds; on CPU, a few minutes.
+
+
+Hyperparameter tuning guidance (included in the notebook)
+
+LR: try {3e-4, 1e-3, 3e-3} for Adam; for SGD+momentum, start around 0.1 and adjust.
+Batch size: 64–256; larger batches on GPU may need LR scaling.
+Weight decay: {0, 1e-5, 1e-4, 5e-4}.
+Dropout: 0.25–0.5 (reduce if underfitting).
+Schedules: StepLR every 5 epochs or CosineAnnealing often improves the tail of training.
+Light augmentation (optional): ±10° rotation, ≤10% translation—MNIST benefits from small geometric variability.
+
+The notebook’s tiny sweep cell shows a quick, low-cost comparison of a few (lr, weight_decay) pairs over 2 epochs—you can extend it or plug in SGD+momentum to compare optimizers.
+
+Citations & references
+
+torchvision MNIST dataset: official docs, API, and parameters (download, transforms, etc.) are documented here:
+PyTorch Vision: MNIST Dataset (see class, args & usage) — torchvision.datasets.MNIST (official)
+Source: PyTorch docs (torchvision MNIST) — https://docs.pytorch.org/vision/main/generated/torchvision.datasets.MNIST.html
+
+
+If you’d like, I can:
+
+Add a Ray Tune / Optuna section for automated HPO.
+Swap in SGD + momentum with a cosine schedule and show a side-by-side comparison.
+Export a .py script version alongside the notebook.
