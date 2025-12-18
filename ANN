@@ -1,0 +1,67 @@
+Awesome—I'll create the deliverable notebook for you and keep the workflow aligned with the resources you shared. I’ve generated a ready-to-run PyTorch notebook that implements an Artificial Neural Network (ANN) on the Deep Learning A–Z (Churn Modelling) dataset and includes clear comments on hyperparameter tuning and a small random search.
+Your notebook:
+ANN_Churn_PyTorch.ipynb
+What’s inside the notebook
+
+Data loading & preprocessing
+
+Expects Churn_Modelling.csv in the same folder.
+Drops identifier columns (RowNumber, CustomerId, Surname).
+Encodes Gender (binary) and Geography (one-hot).
+Train/Val/Test split (60/20/20) with standardization based on train statistics.
+
+
+PyTorch ANN model
+
+Configurable hidden units, layers, and dropout.
+Trains with Adam and BCEWithLogitsLoss.
+Early stopping on validation accuracy.
+
+
+Hyperparameter tuning (small random search)
+
+Randomly samples combinations of:
+
+lr: {1e-3, 5e-4, 1e-4}
+hidden_dim: {16, 32, 64}
+num_layers: {1, 2}
+dropout: {0.0, 0.2, 0.5}
+batch_size: {32, 64, 128}
+weight_decay: {0.0, 1e-5, 1e-4}
+
+
+Picks the best config by validation accuracy.
+
+
+Final training & evaluation
+
+Retrains on train+val using best hyperparameters.
+Evaluates on the test split (accuracy + ROC-AUC if scikit-learn is available).
+
+
+Artifacts
+
+Saves models/best_ann.pth and models/preprocessing.json (with mean/std and best hparams).
+
+
+
+
+This structure is practical and learner-friendly—exactly the kind of workflow RaiseAcad learners appreciate.
+
+How to run
+
+Download the Kaggle dataset and place Churn_Modelling.csv in the notebook’s folder (the dataset page is linked in your instructions).
+Open the notebook and run cells top-to-bottom.
+Optional: increase max_trials or widen the search space to perform more exhaustive tuning.
+
+Notes on tuning (included in the notebook)
+
+Start with lr = 1e-3 for Adam; lower it if training plateaus or is noisy.
+Increase hidden_dim or num_layers if you see underfitting; reduce or add dropout/weight decay if overfitting.
+Use early stopping with patience 5–6 on validation accuracy.
+Track ROC-AUC alongside accuracy for a better view of class separation.
+
+References
+
+Kaggle dataset: Deep Learning A–Z: ANN (Churn Modelling) — use the CSV from that dataset page.
+Medium article: Building an ANN with PyTorch: A deep dive into neural network training (Jillani Soft Tech) — a helpful walkthrough that complements this notebook’s approach.
