@@ -33,3 +33,46 @@ Plot Predicted vs Actual Close on the test set for both LSTM and GRU.
 Artifacts
 
 Saves model weights (artifacts/lstm_model.pt, artifacts/gru_model.pt) and predictions for reuse.
+Quick start (local run)
+
+
+Create a virtual env (recommended) and install dependencies:
+pip install torch pandas numpy scikit-learn matplotlib
+
+
+for live data
+
+pip install yfinance
+
+
+yfinance is the common, research-friendly choice to fetch market data programmatically and has documentation and terms outlined on its PyPI and docs pages. [in-prod.as...rosoft.com], [in-prod.as...rosoft.com]
+
+
+Open the notebook (stock_seq_prediction.ipynb) and run cells:
+
+By default it loads synthetic_stock_AAPL_like.csv.
+To use real data, set in the config cell:
+
+
+USE_YFINANCE = True
+TICKER = 'AAPL'    # or 'RELIANCE.NS', 'TSLA', etc.
+START = '2015-01-01'
+
+Inspect outputs
+
+Metrics (RMSE/MAE/MAPE) will print in the evaluation cell.
+A chart comparing Actual vs LSTM vs GRU predictions will display.
+Trained weights + predictions are saved under ./artifacts.
+
+
+
+
+About the synthetic dataset
+
+The CSV mimics AAPL-like behavior from 2015-01-01 to 2025-12-15 on business days:
+
+Open, High, Low, Close, Adj Close, Volume, and a Ticker column (AAPL_SYN).
+Prices are generated using geometric Brownian motion (drift + volatility); intraday ranges (High/Low) and log-normal Volume with mild trend/seasonality are added for realism.
+
+
+This lets train and evaluate the pipeline offline now, then flip to real data via yfinance later. yfinance usage is extensively documented and widely adopted for educational projects like this.
