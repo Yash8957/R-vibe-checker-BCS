@@ -1,0 +1,35 @@
+Models implemented (brownie points ✅):
+
+LSTM (multi-layer, dropout)
+GRU (multi-layer, dropout)
+
+Pipeline:
+
+Data source selection
+
+Default: local CSV (synthetic_stock_AAPL_like.csv).
+Optional: set USE_YFINANCE=True to fetch OHLCV for any ticker with yfinance (e.g., AAPL, MSFT, RELIANCE.NS). yfinance provides a Pythonic wrapper over Yahoo Finance’s public endpoints and is meant for research/educational use only; check terms of use mentioned on its project page. [in-prod.as...rosoft.com], [in-prod.as...rosoft.com]
+Alternatively, you can swap in a Kaggle dataset (there are many stock-price datasets published, e.g., NASDAQ equities or specific tickers), if you prefer an offline real-world dataset. [pypi.org], [ranaroussi.github.io]
+
+
+Preprocessing
+
+Sort by date, scale features (Open, High, Low, Close, Volume) with MinMaxScaler.
+Create sliding windows (sequence length = 60) to predict next-day Close.
+Time-based train/val/test split (e.g., 80/10/10).
+
+
+Training
+
+Adam optimizer, MSE loss, best-state restore based on validation loss.
+
+
+Evaluation & Visualization
+
+RMSE, MAE, MAPE (in original price scale).
+Plot Predicted vs Actual Close on the test set for both LSTM and GRU.
+
+
+Artifacts
+
+Saves model weights (artifacts/lstm_model.pt, artifacts/gru_model.pt) and predictions for reuse.
